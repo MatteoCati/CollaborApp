@@ -4,7 +4,6 @@ export const createTask = (task) => {
         
         task.teamId = state.team.currentTeam._id;
         task.ownerId = state.auth.user._id;
-        console.log(task);
         fetch('http://localhost:8000/api/tasks', {
             credentials: "include",
             method: 'POST',

@@ -7,9 +7,9 @@ import useFetchUsers from "../../hooks/useFetchUsers";
 
 
 const CreateTask = (props) => {
-    const [title, setTitle] = useState(props.userId);
+    const [title, setTitle] = useState("");
     const [description, setDescription] = useState('');
-    //const [assigned, setAssigned] = useState(props.userId);
+    const [assignedId, setAssignedId] = useState(props.userId);
 
     const navigate = useNavigate();
 
@@ -22,14 +22,11 @@ const CreateTask = (props) => {
         const task = {
             title: title,
             description: description,
-        }
-        /*if(assigned !== "myself"){
-            task.assignedId = assigned;
-        }*/
+            assignedId: assignedId
+        };
         props.createTask(task);
         navigate('/');
     }
-
         return (
             <div className= 'create'>
                 <h2>Add a New Task</h2>
@@ -47,13 +44,13 @@ const CreateTask = (props) => {
                         id="description"
                         onChange={(e) => setDescription(e.target.value)}
                     ></textarea>
-                    {/*<label>Assign task to:</label>
-                    <select defaultValue="myself" 
-                        onChange={(e) => setAssigned(e.target.value)}
+                    <label>Assign task to:</label>
+                    <select value={assignedId}
+                        onChange={(e) => {setAssignedId(e.target.value)}}
                         className="select-css"
-                    >s
+                    >
                         { toAssignUsers.map((user) => ( <option key={user._id} value={user._id}>{ user.username }</option> )) }
-                     </select>  */}
+                    </select>
                     <button>Add Task</button>
                 </form>
             </div>

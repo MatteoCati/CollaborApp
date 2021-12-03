@@ -1,4 +1,5 @@
 const Task = require('../models/Task');
+const User = require('../models/User');
 
 /* Get all tasks visible to the current user */
 module.exports.getTasks = async (req, res, next) =>{
@@ -41,7 +42,7 @@ module.exports.addTask = async (req, res, next) =>{
     try{
         var assigned = req.user;
         if(req.body.assignedId){
-            assigned = User.findById(req.body.assignedId);
+            assigned = await User.findById(req.body.assignedId);
         }
         task.assignedId = assigned._id;
         task.assignedUsername = assigned.username;
