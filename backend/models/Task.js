@@ -12,14 +12,14 @@ const TaskSchema = new Schema({
         default: ''
     },
     ownerId: {
-        type: String,
+        type: mongoose.ObjectId,
         required: true
     },
     ownerUsername: {
         type: String,
     },
     assignedId: {
-        type: String,
+        type: mongoose.ObjectId,
     },
     assignedUsername: {
         type: String,

@@ -5,12 +5,19 @@ import { createTask } from '../../store/actions/taskActions';
 import { selectUsersInTeam } from "../../store/selectors/teamSelectors";
 import useFetchUsers from "../../hooks/useFetchUsers";
 
+import { Typography, Button, Container, TextField, Select, MenuItem,
+            FormControl, InputLabel } from "@mui/material";
+import SendIcon from '@mui/icons-material/Send';
+
+
 
 const CreateTask = (props) => {
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [assignedId, setAssignedId] = useState(props.userId);
 
+    const [titleError, setTitleError] = useState(false);
+    const [descriptionError, setDescriptionError] = useState(false);
     const navigate = useNavigate();
 
     const { users } = useFetchUsers();
@@ -18,7 +25,23 @@ const CreateTask = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+        setTitleError(false);
+        setDescriptionError(false);
+
+        // Check errors
+        let error = false;
+        if(title === ''){
+            setTitleError(true);
+            error = true;
+        }
+        if(description === ''){
+            setDescriptionError(true);
+            error = true;
+        }
+        if(error){
+            return;
+        }
+
         const task = {
             title: title,
             description: description,
@@ -27,33 +50,64 @@ const CreateTask = (props) => {
         props.createTask(task);
         navigate('/');
     }
-        return (
-            <div className= 'create'>
-                <h2>Add a New Task</h2>
-                <form onSubmit={handleSubmit}>
-                    <label>Task name:</label>
-                    <input
-                        type="text"
+
+
+    const fieldStyle = {
+        m: 2,
+        display: "block",
+    }
+    
+    return (
+            <Container>
+                <Typography 
+                    variant="h6" 
+                    component="h2" 
+                    gutterBottom 
+                    color="textSecondary"
+                >Add a New Task</Typography>
+                <form onSubmit={handleSubmit} noValidate autoComplete="off">
+                    <TextField 
+                        sx={fieldStyle}
+                        label="Title"
+                        variant="standard"
                         required
-                        id = "title"
+                        fullWidth
                         onChange={(e) => setTitle(e.target.value)}
+                        error={titleError}
                     />
-                    <label>Task description:</label>
-                    <textarea
+                    <TextField 
+                        sx = {fieldStyle}
+                        label="Desription"
+                        variant="outlined"
+                        multiline
+                        rows={4}
+                        fullWidth
                         required
-                        id="description"
+                        error={descriptionError}
                         onChange={(e) => setDescription(e.target.value)}
-                    ></textarea>
-                    <label>Assign task to:</label>
-                    <select value={assignedId}
-                        onChange={(e) => {setAssignedId(e.target.value)}}
-                        className="select-css"
-                    >
-                        { toAssignUsers.map((user) => ( <option key={user._id} value={user._id}>{ user.username }</option> )) }
-                    </select>
-                    <button>Add Task</button>
+                    />
+                    <FormControl sx={fieldStyle}>
+                        <InputLabel id="select-assign-label">Assigned to:</InputLabel>
+                        <Select 
+                            sx={{minWidth: 300}}
+                            labelId="select-assign-label"
+                            value={assignedId}
+                            label="Assigned to:"
+                            variant="outlined"
+                            onChange={(e) => {setAssignedId(e.target.value)}}
+                        >
+                            { toAssignUsers.map((user) => ( <MenuItem key={user._id} value={user._id}>{ user.username }</MenuItem> )) }
+                        </Select>
+                    </FormControl>
+                    
+                    <Button 
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                        endIcon = {<SendIcon/>}
+                    >Add Task</Button>
                 </form>
-            </div>
+            </Container>
         );
 }
 

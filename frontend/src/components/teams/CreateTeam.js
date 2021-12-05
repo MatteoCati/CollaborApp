@@ -1,3 +1,4 @@
+import { Button, Container, TextField } from "@mui/material";
 import React  from "react";
 import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
@@ -26,20 +27,27 @@ class CreateTeam extends React.Component {
             return <Navigate to="/"/>
         }
 
+        const fieldStyle = {
+            m: 2,
+            display: "block",
+        }
+
         return (
-            <div className= 'create'>
+            <Container>
                 <h2>Create a new Team</h2>
                 <form onSubmit={this.handleSubmit}>
-                    <label>Team name:</label>
-                    <input
-                        type="text"
+                    <TextField 
+                        sx={fieldStyle}
+                        label="Name"
+                        id="name"
+                        variant="standard"
                         required
-                        id = "name"
+                        fullWidth
                         onChange={this.handleChange}
                     />
-                    <button>Create Team</button>
+                    <Button variant="contained" type="submit">Create Team</Button>
                 </form>
-            </div>
+            </Container>
         );
     }
 }

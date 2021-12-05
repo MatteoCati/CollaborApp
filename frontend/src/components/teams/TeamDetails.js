@@ -3,9 +3,12 @@ import { useParams } from "react-router";
 import useFetchUsers from "../../hooks/useFetchUsers";
 import { addUserToTeam } from "../../store/actions/teamActions";
 import { selectUsersNotInTeam, teamByIdSelector } from "../../store/selectors/teamSelectors";
+import { Container, Select, Typography, MenuItem, Button, InputLabel, FormControl } from "@mui/material";
+import { useState} from "react";
+//import { useNavigate} from "react-router-dom";
 
 const TeamDetails = (props) => {
-    var userId = null;
+    const [userId, setUserId] = useState('');
     //const navigate = useNavigate();
 
     const { id } = useParams();
@@ -22,21 +25,28 @@ const TeamDetails = (props) => {
             return;
         }
         props.addUser(userId);
+        //navigate("/");
     }
 
 
     return ( 
-        <div className='activity-details'>
-            <h2>{ team.name }</h2>
-            <p>Add User to the team:</p>
-            <select defaultValue="unselected" onChange={(e) => {userId = e.target.value}}
-                className="select-css"
+        <Container>
+            <Typography variant="h6" color="textSecondary">{ team.name }</Typography>
+            <Typography>Add user to the team: </Typography>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="add-user-label">User</InputLabel>
+            <Select 
+                sx = {{mb: 2}}
+                label="User"
+                labelId="add-user-label"
+                value = {userId}
+                onChange={(e) => setUserId(e.target.value)}
             >
-                <option disabled value="unselected"> -- select a user -- </option>
-                { toAddUsers.map((user) => ( <option key={user._id} value={user._id}>{ user.username }</option> )) }
-            </select>      
-            <button onClick={handleAddUser}>Add</button> 
-        </div> 
+                { toAddUsers.map((user) => ( <MenuItem key={user._id} value={user._id}>{ user.username }</MenuItem> )) }
+            </Select>
+            <Button onClick={handleAddUser} variant="contained">Add</Button> 
+            </FormControl>
+        </Container> 
     );
 }
 

@@ -1,14 +1,21 @@
 import TaskSummary from "./TaskSummary";
+import Grid from "@mui/material/Grid";
+import Masonry from '@mui/lab/Masonry';
 
 const TasksList = ({ tasks }) => {
+
+        return  ( 
+            <Masonry columns={4} spacing={1}>
+                
+                { tasks ? tasks.map(task => (
+                    <Grid item md={4} xs={12} sm={6} key={task._id}>
+                            <TaskSummary   task={task}/>
+                    </Grid> 
+                )) : []}
+            </Masonry>
+        );
+
     
-    return ( 
-        <div className="activity-list">
-            { tasks && tasks.map(task => (
-                <TaskSummary  key={task._id} task={task}/>
-            ))}
-        </div>
-    );
 }
  
 export default TasksList;

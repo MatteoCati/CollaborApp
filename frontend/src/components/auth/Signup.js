@@ -1,5 +1,7 @@
+import { Button, Container, TextField, Typography } from "@mui/material";
 import React  from "react";
 import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { signUp } from "../../store/actions/authActions";
 
 class SignUp extends React.Component {
@@ -24,32 +26,57 @@ class SignUp extends React.Component {
     render() { 
 
         const {authError} = this.props;
+
+        const fieldStyle = {
+            m: 2,
+            display: "block",
+        }
+
         return (
-        <div className="login-signup">
-            <div className="create">
+        <Container>
                 <h2>Sign Up</h2>
                 
                 <form onSubmit={this.handleSubmit}>
-                    <label>Email:</label>
-                    <input required type="email"
-                        id = "email"
-                        onChange= {this.handleChange}
-                    />  
-                    <label>Password:</label>
-                    <input required type="password"
-                        id = "password"
-                        onChange= {this.handleChange}
-                    />  
-                    <label>Username:</label>
-                    <input required type="text"
-                        id = "username"
-                        onChange= {this.handleChange}
-                    />  
-                    {authError && <p className='login-error'>{authError}</p>}
-                    <button>Register</button>
+                    <TextField 
+                        id="email"
+                        sx={fieldStyle}
+                        label="Email"
+                        variant="standard"
+                        required
+                        fullWidth
+                        onChange={this.handleChange}
+                        error = {authError}
+                    />
+                    <TextField 
+                        id="password"
+                        sx={fieldStyle}
+                        label="Password"
+                        variant="standard"
+                        type="password"
+                        required
+                        fullWidth
+                        onChange={this.handleChange}
+                    />
+                    <TextField 
+                        id="username"
+                        sx={fieldStyle}
+                        label="Username"
+                        variant="standard"
+                        required
+                        fullWidth
+                        onChange={this.handleChange}
+                    />
+                    {authError && <Typography className='login-error'>{authError}</Typography>}
+                    <Button 
+                        type="submit"
+                        variant="contained"
+                        color="secondary"
+                    >Register</Button>
                 </form>
-            </div>
-        </div>
+                <Typography>
+                    Already have an account? <NavLink to="/signin">Log In</NavLink>
+                </Typography>
+        </Container>
         );
     }
 }

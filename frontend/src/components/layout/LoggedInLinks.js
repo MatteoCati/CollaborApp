@@ -1,16 +1,56 @@
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import { logOut } from '../../store/actions/authActions';
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import { useState } from 'react';
 
 const LoggedInLinks = (props) => {
+    const [anchorElUser, setAnchorElUser] = useState(null);
+
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+    
+
     return (
-        <div className="links">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/createteam">Create Team</NavLink>
-            { props.currentTeam && <NavLink to={`/teams/${props.currentTeam._id}`}>Manage Team</NavLink>}
-            <span onClick={props.logOut}>Logout</span>
-        </div>
-    );
+        <>
+        <Typography>{props.user.username}</Typography>
+
+        <Box sx={{ flexGrow: 0, ml: 2 }}>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar />
+              </IconButton>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+                <MenuItem key={"logout"} onClick={props.logOut}>
+                  <Typography textAlign="center">Log Out</Typography>
+                </MenuItem>
+            </Menu>
+          </Box>
+        </>
+    )
+   
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -21,7 +61,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        currentTeam: state.team.currentTeam,
+        user: state.auth.user,
     }
 }
 
