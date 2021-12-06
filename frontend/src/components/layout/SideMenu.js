@@ -1,20 +1,21 @@
 import List from "@mui/material/List";
-import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Collapse, Divider, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { Typography } from "@mui/material";
 import { makeStyles } from '@mui/styles';
-import { SubjectOutlined, AddCircleOutlined }  from '@mui/icons-material';
+import { SubjectOutlined, AddCircleOutlined, SettingsOutlined }  from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router';
 import { connect } from 'react-redux';
+import { setCurrentTeam, getTeams} from '../../store/actions/teamActions';
 
 
 
 
 
-
-const SideMenu = ({drawerWidth, currentTeam, isLogged}) => {
+const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, teams}) => {
     const navigate = useNavigate();
     const location = useLocation();
+    loadTeams();
 
     const useStyles = makeStyles((theme) => {
         return {
@@ -50,23 +51,6 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged}) => {
             { isLogged &&
             <List>
                 <ListItemButton 
-                    key={"my-tasks"} 
-                    onClick = {(e) => navigate("/") }
-                    selected = {location.pathname === "/"}
-                >
-                    <ListItemIcon > <SubjectOutlined color="secondary"/></ListItemIcon>
-                    <ListItemText primary="My Tasks"/>
-                </ListItemButton>
-                <ListItemButton 
-                    key={"create-task"} 
-                    disabled = {currentTeam ? false: true}
-                    onClick = {(e) => navigate("/createtask") }
-                    selected = {location.pathname === "/createtask"}
-                >
-                    <ListItemIcon > <AddCircleOutlined color="secondary"/></ListItemIcon>
-                    <ListItemText primary="Add Task"/>
-                </ListItemButton>
-                <ListItemButton 
                     key={"create-team"} 
                     
                     onClick = {(e) => navigate(`/createteam`) }
@@ -75,6 +59,36 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged}) => {
                     <ListItemIcon > <AddCircleOutlined color="secondary"/></ListItemIcon>
                     <ListItemText primary="Create new Team"/>
                 </ListItemButton>
+                <Divider/>
+                {teams.map((team) => (
+                    <>
+                        <ListItemButton 
+                            key={team.name} 
+                            onClick = {(e) => {changeTeam(team._id);  navigate("/")} }
+                            selected = {currentTeam && currentTeam._id === team._id && 
+                                        location.pathname==="/"}
+                        >
+                            <ListItemIcon > <SubjectOutlined color="secondary"/></ListItemIcon>
+                            <ListItemText primary={team.name}/>
+                        </ListItemButton>
+                        <Collapse 
+                            in={currentTeam && currentTeam._id === team._id} 
+                            timeout="auto" 
+                            unmountOnExit
+                        >
+                            <List component="div" disablePadding>
+                            <ListItemButton 
+                                sx={{ pl: 4 }}
+                                onClick = {(e) => navigate(`teams/${team._id}`)}
+                                selected = {location.pathname === `/teams/${team._id}`}
+                            >
+                                <ListItemIcon > <SettingsOutlined color="secondary"/></ListItemIcon>
+                                <ListItemText  primary="Settings" />
+                            </ListItemButton>
+                            </List>
+                        </Collapse>
+                    </>
+                ))}
             </List> }
 
         </Drawer>
@@ -86,8 +100,16 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged}) => {
 const mapStateToProps = (state) => {
     return {
         currentTeam: state.team.currentTeam,
-        isLogged: state.auth.isLogged
+        isLogged: state.auth.isLogged,
+        teams: state.team.teams,
     }
 }
 
-export default connect(mapStateToProps)(SideMenu);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loadTeams: () => dispatch(getTeams()),
+        changeTeam: (team) => dispatch(setCurrentTeam(team)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideMenu);

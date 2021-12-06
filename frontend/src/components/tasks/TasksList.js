@@ -5,7 +5,7 @@ import Masonry from '@mui/lab/Masonry';
 const TasksList = ({ tasks }) => {
 
         return  ( 
-            <Masonry columns={4} spacing={1}>
+            <Masonry columns={{xs:1, sm:3, lg:4}} spacing={1}>
                 
                 { tasks ? tasks.map(task => (
                     <Grid item md={4} xs={12} sm={6} key={task._id}>
