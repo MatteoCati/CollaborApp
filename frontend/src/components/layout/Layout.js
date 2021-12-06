@@ -1,11 +1,12 @@
 import Navbar from "./Navbar";
 import SideMenu from "./SideMenu";
 import { makeStyles } from "@mui/styles";
+import { connect } from "react-redux";
 
 
 
 
-const drawerWidth = 240;
+
 
 const useStyles = makeStyles((theme) =>{
         return {
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) =>{
 
 const Layout = ({ children, auth }) => {
 
-    
+    const drawerWidth = auth.isLogged ? 240 : 0;
 
     const classes = useStyles();
 
@@ -32,7 +33,7 @@ const Layout = ({ children, auth }) => {
 
             <Navbar drawerWidth={drawerWidth}/>
             
-            <SideMenu drawerWidth={drawerWidth}/> 
+            {auth.isLogged && <SideMenu drawerWidth={drawerWidth}/> }
            
 
             <div className={classes.page}>
@@ -45,4 +46,10 @@ const Layout = ({ children, auth }) => {
 }
 
 
-export default Layout;
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth
+    }
+} 
+
+export default connect(mapStateToProps)(Layout);

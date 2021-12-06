@@ -7,6 +7,7 @@ import { SubjectOutlined, AddCircleOutlined, SettingsOutlined }  from '@mui/icon
 import { useLocation, useNavigate } from 'react-router';
 import { connect } from 'react-redux';
 import { setCurrentTeam, getTeams} from '../../store/actions/teamActions';
+import { useEffect } from "react";
 
 
 
@@ -15,7 +16,11 @@ import { setCurrentTeam, getTeams} from '../../store/actions/teamActions';
 const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, teams}) => {
     const navigate = useNavigate();
     const location = useLocation();
-    loadTeams();
+    useEffect(() => {
+        loadTeams();
+        
+    }, [loadTeams]);
+    
 
     const useStyles = makeStyles((theme) => {
         return {
@@ -33,7 +38,6 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, te
     })
 
     const classes = useStyles();
-
 
 
     return (
@@ -60,10 +64,10 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, te
                     <ListItemText primary="Create new Team"/>
                 </ListItemButton>
                 <Divider/>
-                {teams.map((team) => (
-                    <>
+                {teams && teams.map((team) => (
+                    <div key={team.name} >
                         <ListItemButton 
-                            key={team.name} 
+                            
                             onClick = {(e) => {changeTeam(team._id);  navigate("/")} }
                             selected = {currentTeam && currentTeam._id === team._id && 
                                         location.pathname==="/"}
@@ -82,12 +86,12 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, te
                                 onClick = {(e) => navigate(`teams/${team._id}`)}
                                 selected = {location.pathname === `/teams/${team._id}`}
                             >
-                                <ListItemIcon > <SettingsOutlined color="secondary"/></ListItemIcon>
+                                <ListItemIcon><SettingsOutlined color="secondary"/></ListItemIcon>
                                 <ListItemText  primary="Settings" />
                             </ListItemButton>
                             </List>
                         </Collapse>
-                    </>
+                    </div>
                 ))}
             </List> }
 
