@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { logOut } from '../../store/actions/authActions';
+import { logOut } from '../../store/auth/authActions';
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";

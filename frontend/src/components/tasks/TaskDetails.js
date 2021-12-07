@@ -1,7 +1,7 @@
 import { useSelector, connect } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { changeTaskStatus, deleteTask } from "../../store/actions/taskActions";
-import { taskByIdSelector } from "../../store/selectors/taskSelectors";
+import { changeTaskStatus, deleteTask } from "../../store/task/taskActions";
+import { taskByIdSelector } from "../../store/task/taskSelectors";
 
 const TaskDetails = ({ changeComplete, deleteCurrent }) => {
     

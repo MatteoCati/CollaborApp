@@ -2,7 +2,7 @@ import { Button, Container, TextField } from "@mui/material";
 import React  from "react";
 import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { createTeam } from "../../store/actions/teamActions";
+import { createTeam } from "../../store/team/teamActions";
 
 class CreateTeam extends React.Component {
     state= {

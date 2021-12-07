@@ -2,7 +2,7 @@ import { Button, Container, TextField, Typography } from "@mui/material";
 import React  from "react";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { signUp } from "../../store/actions/authActions";
+import { signUp } from "../../store/auth/authActions";
 
 class SignUp extends React.Component {
     state= {
@@ -45,7 +45,7 @@ class SignUp extends React.Component {
                         required
                         fullWidth
                         onChange={this.handleChange}
-                        error = {authError}
+                        error = {authError !== ''}
                     />
                     <TextField 
                         id="password"

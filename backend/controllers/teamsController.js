@@ -33,8 +33,8 @@ module.exports.addTeam = async (req, res, next) =>{
         let user = await User.findById(req.user._id);
         user.teams.push(newTeam._id);
         await User.findByIdAndUpdate({ _id: user._id }, user);
-        const updatedUser = await User.findById(user._id);
-        res.send(updatedUser);
+        //const updatedUser = await User.findById(user._id);
+        res.send(newTeam);
     }catch(err){
         res.status(400).send(err.message);
     }

@@ -6,14 +6,14 @@ import { makeStyles } from '@mui/styles';
 import { SubjectOutlined, AddCircleOutlined, SettingsOutlined }  from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router';
 import { connect } from 'react-redux';
-import { setCurrentTeam, getTeams} from '../../store/actions/teamActions';
+import { setCurrentTeam, fetchTeams} from '../../store/team/teamActions';
 import { useEffect } from "react";
 
 
 
 
 
-const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, teams}) => {
+const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, teams, loadingTeams}) => {
     const navigate = useNavigate();
     const location = useLocation();
     useEffect(() => {
@@ -52,7 +52,7 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, te
                     CollaborApp
                 </Typography>
             </div>
-            { isLogged &&
+            { isLogged && !loadingTeams &&
             <List>
                 <ListItemButton 
                     key={"create-team"} 
@@ -63,7 +63,7 @@ const SideMenu = ({drawerWidth, currentTeam, isLogged, loadTeams, changeTeam, te
                     <ListItemIcon > <AddCircleOutlined color="secondary"/></ListItemIcon>
                     <ListItemText primary="Create new Team"/>
                 </ListItemButton>
-                <Divider/>
+                <Divider key="divider"/>
                 {teams && teams.map((team) => (
                     <div key={team.name} >
                         <ListItemButton 
@@ -106,13 +106,14 @@ const mapStateToProps = (state) => {
         currentTeam: state.team.currentTeam,
         isLogged: state.auth.isLogged,
         teams: state.team.teams,
+        loadingTeams: state.team.loading,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loadTeams: () => dispatch(getTeams()),
-        changeTeam: (team) => dispatch(setCurrentTeam(team)),
+        loadTeams: () => dispatch(fetchTeams()),
+        changeTeam: (teamId) => dispatch(setCurrentTeam(teamId)),
     }
 }
 

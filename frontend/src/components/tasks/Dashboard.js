@@ -1,8 +1,8 @@
 import React, { Component, createRef } from 'react';
 import TasksList from './TasksList';
 import { connect } from 'react-redux';
-import { getTasks } from '../../store/actions/taskActions';
-import { selectCurrentTeamTasks } from '../../store/selectors/taskSelectors';
+import { fetchTasks } from '../../store/task/taskActions';
+import { selectCurrentTeamTasks } from '../../store/task/taskSelectors';
 import { Navigate } from "react-router-dom";
 
 import AddIcon from '@mui/icons-material/Add';
@@ -114,7 +114,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loadTasks: () => dispatch(getTasks()), 
+        loadTasks: () => dispatch(fetchTasks()), 
     }
 }
 

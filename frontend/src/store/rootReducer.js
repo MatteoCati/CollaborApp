@@ -1,6 +1,6 @@
-import authReducer  from "./authReducer";
-import taskReducer from "./taskReducer";
-import teamReducer from "./teamReducer";
+import authReducer  from "./auth/authReducer";
+import taskReducer from "./task/taskReducer";
+import teamReducer from "./team/teamReducer";
 import { combineReducers } from "redux";
 
 

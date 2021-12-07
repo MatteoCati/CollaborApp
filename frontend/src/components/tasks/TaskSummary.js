@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import { makeStyles } from "@mui/styles"
 import { IconButton, Typography, Button } from "@mui/material";
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
-import { changeTaskStatus, deleteTask } from "../../store/actions/taskActions";
+import { changeTaskStatus, deleteTask } from "../../store/task/taskActions";
 import { connect } from "react-redux";
 
 

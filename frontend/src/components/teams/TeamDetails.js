@@ -1,8 +1,8 @@
 import { connect, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import useFetchUsers from "../../hooks/useFetchUsers";
-import { addUserToTeam } from "../../store/actions/teamActions";
-import { selectUsersNotInTeam, teamByIdSelector } from "../../store/selectors/teamSelectors";
+import { addUserToTeam } from "../../store/team/teamActions";
+import { selectUsersNotInTeam, teamByIdSelector } from "../../store/team/teamSelectors";
 import { Container, Select, Typography, MenuItem, Button, InputLabel, FormControl } from "@mui/material";
 import { useState} from "react";
 //import { useNavigate} from "react-router-dom";

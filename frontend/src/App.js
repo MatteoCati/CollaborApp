@@ -10,7 +10,7 @@ import CreateTask from "./components/tasks/CreateTask";
 import CreateTeam from "./components/teams/CreateTeam"; 
 import { useEffect } from "react";
 import { connect } from "react-redux";
-import { isLoggedIn } from "./store/actions/authActions";
+import { isLoggedIn } from "./store/auth/authActions";
 import {createTheme, ThemeProvider} from "@mui/material";
 import { blue, deepOrange } from "@mui/material/colors";
 import Layout from "./components/layout/Layout";

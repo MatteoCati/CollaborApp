@@ -1,8 +1,8 @@
 import React, { useState }  from "react";
 import { connect, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createTask } from '../../store/actions/taskActions';
-import { selectUsersInTeam } from "../../store/selectors/teamSelectors";
+import { createTask } from '../../store/task/taskActions';
+import { selectUsersInTeam } from "../../store/team/teamSelectors";
 import useFetchUsers from "../../hooks/useFetchUsers";
 
 import { Typography, Button, Container, TextField, Select, MenuItem,
