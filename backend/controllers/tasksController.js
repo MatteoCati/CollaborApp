@@ -37,7 +37,8 @@ module.exports.addTask = async (req, res, next) =>{
         description: req.body.description,
         ownerId: req.user._id,
         ownerUsername: req.user.username,
-        teamId: req.body.teamId
+        teamId: req.body.teamId,
+        prerequisites: req.body.prerequisites,
     }
     try{
         var assigned = req.user;
@@ -64,9 +65,17 @@ module.exports.updateTask = (req, res, next) =>{
     });
 }
 
-module.exports.deleteTask = (req, res, next) =>{
-    Task.findByIdAndDelete({ _id: req.params.id })
-    .then((task) => {
-        res.send(task);
-    });
+module.exports.deleteTask = async (req, res, next) =>{
+    const deletedTask = await Task.findByIdAndDelete({ _id: req.params.id });
+    const tasks = await Task.find({});
+    for(let task of tasks){
+        if(task.prerequisites.includes(deletedTask._id)){
+            Task.updateOne({_id: task._id}, {$pull: {prerequisites: deletedTask._id}}, (err, task) => {
+                if(err){
+                    console.log(err);
+                }
+            } )
+        }
+    }
+    res.send(deletedTask);
 }

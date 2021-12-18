@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import TasksList from './TasksList';
 import { connect } from 'react-redux';
 import { fetchTasks } from '../../store/task/taskActions';
-import { selectCurrentTeamTasks } from '../../store/task/taskSelectors';
+import { selectActiveTasks, selectCompletedTasks, selectQueuedTasks } from '../../store/task/taskSelectors';
 import { Navigate } from "react-router-dom";
 
 import AddIcon from '@mui/icons-material/Add';
@@ -45,7 +45,7 @@ class Dashboard extends Component {
             anchorRef: createRef(),
             redirectTeam: false,
             redirectCreate: false,
-            value: 0,
+            value: 1,
         }
 
          
@@ -59,6 +59,7 @@ class Dashboard extends Component {
         this.setState({redirectCreate: true});
     }
 
+
     render(){
         const { currentTeam } = this.props;
 
@@ -69,34 +70,41 @@ class Dashboard extends Component {
             return <Navigate to={"createtask"} />
         }
 
-        
         return (
             <Box sx={{ width: '100%', mb: 4 }}>
-                <Typography variant="h4" component="h2" sx={{mb:2}}>My Tasks</Typography>
-
-                <Box sx={{ width: '100%' }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs 
-                            value={this.state.value} 
-                            onChange={this.handleChange} 
-                            centered
-                        >
-                            <Tab label="Active" />
-                            <Tab label="Completed" />
-                        </Tabs>
+                <Typography variant="h4" component="h2" sx={{mb:2}}>
+                    My Tasks
+                </Typography>
+                {currentTeam ?
+                    <Box sx={{ width: '100%' }}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                            <Tabs 
+                                value={this.state.value} 
+                                onChange={this.handleChange} 
+                                centered
+                            >
+                                <Tab label="Queued" />
+                                <Tab label="Active" />
+                                <Tab label="Completed" />
+                            </Tabs>
+                        </Box>
+                        <TabPanel value={this.state.value} index={0}>
+                            <TasksList tasks={this.props.queuedTasks}/>
+                        </TabPanel>
+                        <TabPanel value={this.state.value} index={1}>
+                            <TasksList tasks={this.props.activeTasks}/>
+                        </TabPanel>
+                        <TabPanel value={this.state.value} index={2}>
+                            <TasksList tasks={this.props.completedTasks}/>
+                        </TabPanel>
                     </Box>
-                    <TabPanel value={this.state.value} index={0}>
-                        <TasksList tasks={this.props.tasks.filter(task => !task.completed)}/>
-                    </TabPanel>
-                    <TabPanel value={this.state.value} index={1}>
-                        <TasksList tasks={this.props.tasks.filter(task => task.completed)}/>
-                    </TabPanel>
-                </Box>
-                
+                :
+                    <Typography>choose a team to start...</Typography>
+                }
                 {currentTeam && 
-                <Fab sx={fabStyle} color="secondary" onClick={this.handleAddTask}>
-                    <AddIcon />
-                </Fab>
+                    <Fab sx={fabStyle} color="secondary" onClick={this.handleAddTask}>
+                        <AddIcon />
+                    </Fab>
                 }
 
 
@@ -107,7 +115,9 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        tasks : selectCurrentTeamTasks(state),
+        activeTasks : selectActiveTasks(state),
+        queuedTasks: selectQueuedTasks(state),
+        completedTasks: selectCompletedTasks(state),
         currentTeam: state.team.currentTeam,
     }
 }

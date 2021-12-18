@@ -6,16 +6,41 @@ import { selectUsersInTeam } from "../../store/team/teamSelectors";
 import useFetchUsers from "../../hooks/useFetchUsers";
 
 import { Typography, Button, Container, TextField, Select, MenuItem,
-            FormControl, InputLabel } from "@mui/material";
+            FormControl, InputLabel, OutlinedInput } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
+import { selectCurrentTeamTasks, taskByIdSelector } from "../../store/task/taskSelectors";
+import { useTheme } from "@emotion/react";
 
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+
+function getStyles(taskTitle, selectedTasks, theme) {
+    return {
+      fontWeight:
+        selectedTasks.indexOf(taskTitle) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+}
 
 
 const CreateTask = (props) => {
+    const theme = useTheme();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [assignedId, setAssignedId] = useState(props.userId);
-
+    const [prerequisites, setPrerequisites] = useState([]);
+    
     const [titleError, setTitleError] = useState(false);
     const [descriptionError, setDescriptionError] = useState(false);
     const navigate = useNavigate();
@@ -41,21 +66,33 @@ const CreateTask = (props) => {
         if(error){
             return;
         }
-
+        
         const task = {
             title: title,
             description: description,
-            assignedId: assignedId
+            assignedId: assignedId,
+            prerequisites: prerequisites,
         };
         props.createTask(task);
+        
         navigate('/');
     }
+
+    const handlePrerequisites = (event) => {
+        const { target: { value }, } = event;
+        setPrerequisites(
+            // On autofill we get a the stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
 
 
     const fieldStyle = {
         m: 2,
         display: "block",
     }
+
+
     
     return (
             <Container>
@@ -77,7 +114,7 @@ const CreateTask = (props) => {
                     />
                     <TextField 
                         sx = {fieldStyle}
-                        label="Desription"
+                        label="Description"
                         variant="outlined"
                         multiline
                         rows={4}
@@ -99,7 +136,27 @@ const CreateTask = (props) => {
                             { toAssignUsers.map((user) => ( <MenuItem key={user._id} value={user._id}>{ user.username }</MenuItem> )) }
                         </Select>
                     </FormControl>
-                    
+                    <FormControl sx={fieldStyle}>
+                        <InputLabel>Prerequisites</InputLabel>
+                        <Select
+                        sx={{minWidth: 300}}
+                        multiple
+                        value={prerequisites}
+                        onChange={handlePrerequisites}
+                        input={<OutlinedInput label="Prerequisites" />}
+                        MenuProps={MenuProps}
+                        >
+                        {props.currentTasks.map((task) => (
+                            <MenuItem
+                            key={task._id}
+                            value={task._id}
+                            style={getStyles(task._id, prerequisites, theme)}
+                            >
+                            {task.title}
+                            </MenuItem>
+                        ))}
+                        </Select>
+                    </FormControl>
                     <Button 
                         type="submit"
                         variant="contained"
@@ -119,7 +176,9 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return {
-        userId: state.auth.user._id
+        userId: state.auth.user._id,
+        currentTasks: selectCurrentTeamTasks(state),
+        getTaskById: (id) => taskByIdSelector(state, id),
     }
 }
  

@@ -65,6 +65,7 @@ export const createTeam = (team) => {
         .then((data) => {
             // Add team to the state
             dispatch(createTeamSuccess(data));
+            dispatch(setCurrentTeam(data._id));
         }).catch((err) => {
             // Set error message
             dispatch(createTeamFailure(err.message));

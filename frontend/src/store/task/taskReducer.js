@@ -14,6 +14,7 @@ const taskReducer = (state = initState, action) => {
                 loading: true
             };
         case types.CREATE_TASK_SUCCESS:
+            console.log(action.payload);
             return {
                 ...state,
                 tasks: [...state.tasks, action.payload],
@@ -52,7 +53,7 @@ const taskReducer = (state = initState, action) => {
         case types.DELETE_TASK_SUCCESS:
             return {
                 ...state,
-                tasks: state.tasks.filter(x => x._id !== action.payload._id),
+                tasks: [],
                 loading: false,
                 error: '',
             }

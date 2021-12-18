@@ -31,6 +31,10 @@ const TaskSchema = new Schema({
     teamId: {
         type: mongoose.ObjectId, 
         ref: 'Team'
+    },
+    prerequisites: {
+        type: [mongoose.ObjectId],
+        ref: 'Task'
     }
 });
 

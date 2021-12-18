@@ -127,6 +127,7 @@ export const deleteTask = (task) => {
             return res.json()
         }).then((data) =>{
             dispatch(deleteTaskSuccess(data));
+            dispatch(fetchTasks());
         }).catch((err) => {
             dispatch(deleteTaskFailure(err.message));
         });
@@ -137,6 +138,7 @@ export const deleteTask = (task) => {
 export const fetchTasks = () => {
     return (dispatch, getState) => {
         dispatch(fetchTasksRequest());
+        console.log("Fetched");
         fetch('http://localhost:8000/api/tasks', {
             credentials: "include",
             method: 'GET',
